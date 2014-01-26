@@ -2,8 +2,6 @@ module.exports = class StupidDOMInterface
 
 	constructor: (@el) ->
 
-		@el.style.position = 'absolute'
-
 		@_s = new Float32Array 25
 
 		# initialize transform values

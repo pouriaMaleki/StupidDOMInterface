@@ -21,103 +21,99 @@ module.exports = class StupidDOMInterface
 
 		if init.width isnt undefined
 
-			@_s[0] = init.width
+			@setWidth init.width
 
 		if init.height isnt undefined
 
-			@_s[1] = init.height
+			@setHeight init.height
 
 		if init.top isnt undefined
 
-			@_s[2] = init.top
+			@setTop init.top
 
 		if init.left isnt undefined
 
-			@_s[3] = init.left
+			@setLeft init.left
 
 		if init.bottom isnt undefined
 
-			@_s[4] = init.bottom
+			@setBottom init.bottom
 
 		if init.right isnt undefined
 
-			@_s[5] = init.right
+			@setRight init.right
 
 		if init.opacity isnt undefined
 
-			@_s[6] = init.opacity
+			@setOpacity init.opacity
 
-		if init.TextShadowH isnt undefined
+		if init.textShadowH isnt undefined
 
-			@_s[7] = init.TextShadowH
+			@setTextShadowH init.textShadowH
 
-		if init.TextShadowV isnt undefined
+		if init.textShadowV isnt undefined
 
-			@_s[8] = init.TextShadowV
+			@setTextShadowV init.textShadowV
 
-		if init.TextShadowBlur isnt undefined
+		if init.textShadowBlur isnt undefined
 
-			@_s[9] = init.TextShadowBlur
+			@setTextShadowBlur init.textShadowBlur
 
-		if init.TextShadowColorRed isnt undefined
+		if init.textShadowColor isnt undefined
 
-			@_s[10] = init.TextShadowColorRed
+			if init.textShadowColor.red   is undefined then init.textShadowColor.red   = @_s[10]
+			if init.textShadowColor.green is undefined then init.textShadowColor.green = @_s[11]
+			if init.textShadowColor.blue  is undefined then init.textShadowColor.blue  = @_s[12]
 
-		if init.TextShadowColorGreen isnt undefined
-
-			@_s[11] = init.TextShadowColorGreen
-
-		if init.TextShadowColorBlue isnt undefined
-
-			@_s[12] = init.TextShadowColorBlue
+			@setTextShadowColor init.textShadowColor.red, init.textShadowColor.green, init.textShadowColor.blue
 
 		if init.rotateX isnt undefined
 
-			@_s[13] = init.rotateX
+			@setRotateX init.rotateX
 
 		if init.rotateY isnt undefined
 
-			@_s[14] = init.rotateY
+			@setRotateY init.rotateY
 
 		if init.rotateZ isnt undefined
 
-			@_s[15] = init.rotateZ
+			@setRotateZ init.rotateZ
 
 		if init.translateX isnt undefined
 
-			@_s[16] = init.translateX
+			@setTranslateX init.translateX
 
 		if init.translateY isnt undefined
 
-			@_s[17] = init.translateY
+			@setTranslateY init.translateY
 
 		if init.translateZ isnt undefined
 
-			@_s[18] = init.translateZ
+			@setTranslateZ init.translateZ
 
 		if init.scaleX isnt undefined
 
-			@_s[19] = init.scaleX
+			@setScaleX init.scaleX
 
 		if init.scaleY isnt undefined
 
-			@_s[20] = init.scaleY
+			@setScaleY init.scaleY
 
 		if init.scaleZ isnt undefined
 
-			@_s[21] = init.scaleZ
+			@setScaleZ init.scaleZ
 
 		if init.skewX isnt undefined
 
-			@_s[22] = init.skewX
+			@setSkewX init.skewX
 
 		if init.skewY isnt undefined
 
-			@_s[23] = init.skewY
+			@setSkewY init.skewY
 
 		if init.perspective isnt undefined
 
-			@_s[24] = init.perspective
+			@setPerspective init.perspective
 
 	setSimple: (title, value, param) ->
 

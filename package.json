@@ -1,7 +1,7 @@
 {
   "name": "stupid-dom-interface",
-  "version": "0.1.0-beta.3",
-  "description": "(work in progress)",
+  "version": "0.1.0-beta.4",
+  "description": "Simple JS library for setting and getting DOM element styles",
   "main": "scripts/js/lib/StupidDOMInterface.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,7 +12,8 @@
     "url": "https://github.com/pouriaMaleki/StupidDOMInterface.git"
   },
   "keywords": [
-    "DOM"
+    "DOM",
+    "Style"
   ],
   "author": "pouriaMaleki",
   "license": "MIT",

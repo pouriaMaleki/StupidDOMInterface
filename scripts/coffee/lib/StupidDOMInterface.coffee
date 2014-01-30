@@ -4,9 +4,9 @@ module.exports = class StupidDOMInterface
 
 		@_s = new Float32Array 25
 
-		@initialize init
+		@_initialize init
 
-	initialize: (init) ->
+	_initialize: (init) ->
 
 		# initialize opacity
 		@_s[6] = 1
@@ -19,103 +19,109 @@ module.exports = class StupidDOMInterface
 
 		return if init is undefined or init is null
 
-		if init.width isnt undefined
+		@setComplex(init)
 
-			@setWidth init.width
+	setComplex: (complex) ->
 
-		if init.height isnt undefined
+		if complex.width isnt undefined
 
-			@setHeight init.height
+			@setWidth complex.width
 
-		if init.top isnt undefined
+		if complex.height isnt undefined
 
-			@setTop init.top
+			@setHeight complex.height
 
-		if init.left isnt undefined
+		if complex.top isnt undefined
 
-			@setLeft init.left
+			@setTop complex.top
 
-		if init.bottom isnt undefined
+		if complex.left isnt undefined
 
-			@setBottom init.bottom
+			@setLeft complex.left
 
-		if init.right isnt undefined
+		if complex.bottom isnt undefined
 
-			@setRight init.right
+			@setBottom complex.bottom
 
-		if init.opacity isnt undefined
+		if complex.right isnt undefined
 
-			@setOpacity init.opacity
+			@setRight complex.right
 
-		if init.textShadowH isnt undefined
+		if complex.opacity isnt undefined
 
-			@setTextShadowH init.textShadowH
+			@setOpacity complex.opacity
 
-		if init.textShadowV isnt undefined
+		if complex.textShadowH isnt undefined
 
-			@setTextShadowV init.textShadowV
+			@setTextShadowH complex.textShadowH
 
-		if init.textShadowBlur isnt undefined
+		if complex.textShadowV isnt undefined
 
-			@setTextShadowBlur init.textShadowBlur
+			@setTextShadowV complex.textShadowV
 
-		if init.textShadowColor isnt undefined
+		if complex.textShadowBlur isnt undefined
 
-			if init.textShadowColor.red   is undefined then init.textShadowColor.red   = @_s[10]
-			if init.textShadowColor.green is undefined then init.textShadowColor.green = @_s[11]
-			if init.textShadowColor.blue  is undefined then init.textShadowColor.blue  = @_s[12]
+			@setTextShadowBlur complex.textShadowBlur
 
-			@setTextShadowColor init.textShadowColor.red, init.textShadowColor.green, init.textShadowColor.blue
+		if complex.textShadowColor isnt undefined
 
-		if init.rotateX isnt undefined
+			if complex.textShadowColor.red   is undefined then complex.textShadowColor.red   = @_s[10]
+			if complex.textShadowColor.green is undefined then complex.textShadowColor.green = @_s[11]
+			if complex.textShadowColor.blue  is undefined then complex.textShadowColor.blue  = @_s[12]
 
-			@setRotateX init.rotateX
+			@setTextShadowColor complex.textShadowColor.red, complex.textShadowColor.green, complex.textShadowColor.blue
 
-		if init.rotateY isnt undefined
+		if complex.rotateX isnt undefined
 
-			@setRotateY init.rotateY
+			@setRotateX complex.rotateX
 
-		if init.rotateZ isnt undefined
+		if complex.rotateY isnt undefined
 
-			@setRotateZ init.rotateZ
+			@setRotateY complex.rotateY
 
-		if init.translateX isnt undefined
+		if complex.rotateZ isnt undefined
 
-			@setTranslateX init.translateX
+			@setRotateZ complex.rotateZ
 
-		if init.translateY isnt undefined
+		if complex.translateX isnt undefined
 
-			@setTranslateY init.translateY
+			@setTranslateX complex.translateX
 
-		if init.translateZ isnt undefined
+		if complex.translateY isnt undefined
 
-			@setTranslateZ init.translateZ
+			@setTranslateY complex.translateY
 
-		if init.scaleX isnt undefined
+		if complex.translateZ isnt undefined
 
-			@setScaleX init.scaleX
+			@setTranslateZ complex.translateZ
 
-		if init.scaleY isnt undefined
+		if complex.scaleX isnt undefined
 
-			@setScaleY init.scaleY
+			@setScaleX complex.scaleX
 
-		if init.scaleZ isnt undefined
+		if complex.scaleY isnt undefined
 
-			@setScaleZ init.scaleZ
+			@setScaleY complex.scaleY
 
-		if init.skewX isnt undefined
+		if complex.scaleZ isnt undefined
 
-			@setSkewX init.skewX
+			@setScaleZ complex.scaleZ
 
-		if init.skewY isnt undefined
+		if complex.skewX isnt undefined
 
-			@setSkewY init.skewY
+			@setSkewX complex.skewX
 
-		if init.perspective isnt undefined
+		if complex.skewY isnt undefined
 
-			@setPerspective init.perspective
+			@setSkewY complex.skewY
 
-	setSimple: (title, value, param) ->
+		if complex.perspective isnt undefined
+
+			@setPerspective complex.perspective
+
+		return @
+
+	_setSimple: (title, value, param) ->
 
 		if param isnt null
 
@@ -123,11 +129,11 @@ module.exports = class StupidDOMInterface
 
 		@el.style[title] = value
 
-	setTextShadow: ->
+	_setTextShadow: ->
 
 		@el.style.textShadow = (@_s[7] + 'px') + ' ' + (@_s[8] + 'px') + ' ' + (@_s[9] + 'px') + ' ' + ('rgb(' + @_s[10] + ',' + @_s[11] + ',' + @_s[12] + ')')
 
-	setTransform: ->
+	_setTransform: ->
 
 		transformString = ''
 
@@ -195,9 +201,11 @@ module.exports = class StupidDOMInterface
 
 	setWidth: (width) ->
 
-		@setSimple 'width', width, 'px'
+		@_setSimple 'width', width, 'px'
 
 		@_s[0] = width
+
+		return @
 
 	getHeight: ->
 
@@ -205,9 +213,11 @@ module.exports = class StupidDOMInterface
 
 	setHeight: (height) ->
 
-		@setSimple 'height', height, 'px'
+		@_setSimple 'height', height, 'px'
 
 		@_s[1] = height
+
+		return @
 
 	#
 	#	Pos
@@ -219,9 +229,11 @@ module.exports = class StupidDOMInterface
 
 	setTop: (top) ->
 
-		@setSimple 'top', top, 'px'
+		@_setSimple 'top', top, 'px'
 
 		@_s[2] = top
+
+		return @
 
 	getLeft: ->
 
@@ -229,9 +241,11 @@ module.exports = class StupidDOMInterface
 
 	setLeft: (left) ->
 
-		@setSimple 'left', left, 'px'
+		@_setSimple 'left', left, 'px'
 
 		@_s[3] = left
+
+		return @
 
 	getBottom: ->
 
@@ -239,9 +253,11 @@ module.exports = class StupidDOMInterface
 
 	setBottom: (bottom) ->
 
-		@setSimple 'bottom', bottom, 'px'
+		@_setSimple 'bottom', bottom, 'px'
 
 		@_s[4] = bottom
+
+		return @
 
 	getRight: ->
 
@@ -249,9 +265,11 @@ module.exports = class StupidDOMInterface
 
 	setRight: (right) ->
 
-		@setSimple 'right', right, 'px'
+		@_setSimple 'right', right, 'px'
 
 		@_s[5] = right
+
+		return @
 
 	#
 	#	Opacity
@@ -263,9 +281,11 @@ module.exports = class StupidDOMInterface
 
 	setOpacity: (opacity) ->
 
-		@setSimple 'opacity', opacity, null
+		@_setSimple 'opacity', opacity, null
 
 		@_s[6] = opacity
+
+		return @
 
 	#
 	#	Text Shadow
@@ -279,7 +299,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[7] = h
 
-		do @setTextShadow
+		do @_setTextShadow
+
+		return @
 
 	getTextShadowV: ->
 
@@ -289,7 +311,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[8] = v
 
-		do @setTextShadow
+		do @_setTextShadow
+
+		return @
 
 	getTextShadowBlur: ->
 
@@ -299,7 +323,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[9] = blur
 
-		do @setTextShadow
+		do @_setTextShadow
+
+		return @
 
 	getTextShadowColor: ->
 
@@ -311,7 +337,9 @@ module.exports = class StupidDOMInterface
 		@_s[11] = colorGreen
 		@_s[12] = colorBlue
 
-		do @setTextShadow
+		do @_setTextShadow
+
+		return @
 
 	#
 	#	Transforms
@@ -327,7 +355,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[13] = rotateX
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	getRotateY: ->
 
@@ -337,7 +367,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[14] = rotateY
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	getRotateZ: ->
 
@@ -347,7 +379,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[15] = rotateZ
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	#
 	#	Translate
@@ -361,7 +395,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[16] = translateX
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	getTranslateY: ->
 
@@ -371,7 +407,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[17] = translateY
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	getTranslateZ: ->
 
@@ -381,7 +419,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[18] = translateZ
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	#
 	#	Scale
@@ -395,7 +435,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[19] = scaleX
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	getScaleY: ->
 
@@ -405,7 +447,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[20] = scaleY
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	getScaleZ: ->
 
@@ -415,7 +459,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[21] = scaleZ
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	#
 	#	Skew
@@ -429,7 +475,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[22] = skewX
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	getSkewY: ->
 
@@ -439,7 +487,9 @@ module.exports = class StupidDOMInterface
 
 		@_s[23] = skewY
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 
 	#
 	#	perspective
@@ -453,5 +503,7 @@ module.exports = class StupidDOMInterface
 
 		@_s[24] = perspective
 
-		do @setTransform
+		do @_setTransform
+
+		return @
 

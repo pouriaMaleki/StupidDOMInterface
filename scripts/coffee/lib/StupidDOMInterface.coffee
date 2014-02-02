@@ -238,7 +238,7 @@ module.exports = class StupidDOMInterface
 			transformString = ' perspective(' + @_s[24] + ') ' + transformString
 
 
-		@css.setTransform @el, transformString
+		css.setTransform @el, transformString
 
 	#
 	#	Size

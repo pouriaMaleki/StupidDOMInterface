@@ -213,6 +213,10 @@ module.exports = class StupidDOMInterface
 
 			return @
 
+		name = name
+		.replace(/([A-Z]{1})/g, '-$1')
+		.toLowerCase()
+
 		@_style[name] = val
 
 		@

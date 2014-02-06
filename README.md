@@ -2,8 +2,6 @@
 
 beta testing:
 
-	```
-
 	DUM = require 'StupidDOMInterface'
 
 	element = document.querySelector('.element')
@@ -24,11 +22,7 @@ beta testing:
 
 		textShadowH: 5
 		textShadowV: 10
-		textShadowColor:
-
-			red: 255
-			green: 100
-			blue: 50
+		textShadowColor: [255, 100, 50]
 
 		textShadowBlur: 10
 
@@ -36,9 +30,13 @@ beta testing:
 		rotateY: 20
 		rotateZ: 40
 
-		translateX: 100
-		translateY: 102
-		translateZ: 103
+		x: 20
+		y: 30
+		z: 40
+
+		localX: 100
+		localY: 102
+		localZ: 103
 
 		scaleX: 1.1
 		scaleY: 1.1
@@ -49,6 +47,18 @@ beta testing:
 
 		perspective: 400
 
-	dumElement = new DUM element, initOptions
+	dumElement1 = new DUM(element, initOptions)
+	.x(400)
+	.y(200)
 
-	```
+	console.log dumElement1.getX()
+
+
+	dumElement2 = DUM('.hello', initOptions)
+	.inside(document.body)
+	.html('Foxie')
+	.set('salam', 'farsi')
+
+	console.log dumElement2.get('salam')
+	console.log dumElement2.current('width')
+

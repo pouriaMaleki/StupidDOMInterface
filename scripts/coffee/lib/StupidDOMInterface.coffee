@@ -2,9 +2,41 @@ css = require './css'
 
 module.exports = class StupidDOMInterface
 
-	constructor: (@node, initial) ->
+	constructor: (node, initial) ->
 
-		@_s = new Float32Array 25
+		unless @ instanceof self
+
+			return new self node, initial
+
+		if typeof node is 'string'
+
+			parts = self._parseTag node
+
+			if parts.name.length is 0
+
+				parts.name = 'div'
+
+			if parts.ns
+
+				node = document.createElementNS parts.ns, parts.name
+
+			else
+
+				node = document.createElement parts.name
+
+			for name, val of parts.attribs
+
+				node.setAttribute name, val
+
+		unless node instanceof Element
+
+			throw Error "node must be an HTML element."
+
+		@node = node
+
+		@_props = new Float32Array 28
+
+		@_map = {}
 
 		@_style = @node.style
 
@@ -13,19 +45,39 @@ module.exports = class StupidDOMInterface
 	_initialize: (initial) ->
 
 		# initialize opacity
-		@_s[6] = 1
+		@_props[6] = 1
 
 		# initialize transform values
-		@_s[19] = 1
-		@_s[20] = 1
-		@_s[21] = 1
-		@_s[24] = 1000000
+
+		# scale
+		@_props[22] = 1
+		@_props[23] = 1
+		@_props[24] = 1
+
+		# perspective
+		@_props[27] = 1000000
 
 		return if initial is undefined or initial is null
 
-		@set(initial)
+		@from(initial)
 
-	set: (props) ->
+	inside: (node) ->
+
+		node.appendChild @node
+
+		@
+
+	detach: ->
+
+		p = @node.parentNode
+
+		if p?
+
+			p.removeChild @node
+
+		@
+
+	from: (props) ->
 
 		for name, val of props
 
@@ -41,62 +93,111 @@ module.exports = class StupidDOMInterface
 
 	_setTextShadow: ->
 
-		@_style.textShadow = (@_s[7] + 'px') + ' ' + (@_s[8] + 'px') + ' ' + (@_s[9] + 'px') + ' ' + ('rgb(' + @_s[10] + ',' + @_s[11] + ',' + @_s[12] + ')')
+		@_style.textShadow = (@_props[7] + 'px') + ' ' + (@_props[8] + 'px') + ' ' + (@_props[9] + 'px') + ' ' + ('rgb(' + @_props[10] + ',' + @_props[11] + ',' + @_props[12] + ')')
 
 	_setTransform: ->
 
 		transformString = ''
 
-		if @_s[13] isnt 0
 
-			transformString = ' rotateX(' + @_s[13] + 'deg) ' + transformString
 
-		if @_s[14] isnt 0
+		if @_props[22] isnt 1
 
-			transformString = ' rotateY(' + @_s[14] + 'deg) ' + transformString
+			transformString = ' scaleX(' + @_props[22] + ') ' + transformString
 
-		if @_s[15] isnt 0
+		if @_props[23] isnt 1
 
-			transformString = ' rotateZ(' + @_s[15] + 'deg) ' + transformString
+			transformString = ' scaleY(' + @_props[23] + ') ' + transformString
 
-		if @_s[16] isnt 0
+		if @_props[24] isnt 1
 
-			transformString = ' translateX(' + @_s[16] + 'px) ' + transformString
+			transformString = ' scaleZ(' + @_props[24] + ') ' + transformString
 
-		if @_s[17] isnt 0
+		if @_props[25] isnt 0
 
-			transformString = ' translateY(' + @_s[17] + 'px) ' + transformString
+			transformString = ' skewX(' + @_props[25] + 'deg) ' + transformString
 
-		if @_s[18] isnt 0
+		if @_props[26] isnt 0
 
-			transformString = ' translateZ(' + @_s[18] + 'px) ' + transformString
+			transformString = ' skewY(' + @_props[26] + 'deg) ' + transformString
 
-		if @_s[19] isnt 1
+		if @_props[19] isnt 0 or @_props[20] isnt 0 or @_props[21] isnt 0
 
-			transformString = ' scaleX(' + @_s[19] + ') ' + transformString
+			transformString = ' translate3d(' + @_props[19] + 'px, ' + @_props[20] + 'px, ' + @_props[21] + 'px) ' + transformString
 
-		if @_s[20] isnt 1
+		if @_props[13] isnt 0
 
-			transformString = ' scaleY(' + @_s[20] + ') ' + transformString
+			transformString = ' rotateX(' + @_props[13] + 'deg) ' + transformString
 
-		if @_s[21] isnt 1
+		if @_props[14] isnt 0
 
-			transformString = ' scaleZ(' + @_s[21] + ') ' + transformString
+			transformString = ' rotateY(' + @_props[14] + 'deg) ' + transformString
 
-		if @_s[22] isnt 0
+		if @_props[15] isnt 0
 
-			transformString = ' skewX(' + @_s[22] + 'deg) ' + transformString
+			transformString = ' rotateZ(' + @_props[15] + 'deg) ' + transformString
 
-		if @_s[23] isnt 0
+		if @_props[27] < 1000000
 
-			transformString = ' skewY(' + @_s[23] + 'deg) ' + transformString
+			transformString = ' perspective(' + @_props[27] + ') ' + transformString
 
-		if @_s[24] < 1000000
+		if @_props[16] isnt 0 or @_props[17] isnt 0 or @_props[18] isnt 0
 
-			transformString = ' perspective(' + @_s[24] + ') ' + transformString
+			transformString = ' translate3d(' + @_props[16] + 'px, ' + @_props[17] + 'px, ' + @_props[18] + 'px) ' + transformString
 
 
 		css.setTransform @node, transformString
+
+	#
+	#	var
+	#
+
+	set: (name, val) ->
+
+		@_map[name] = val
+
+		@
+
+	get: (name) ->
+
+		@_map[name]
+
+	del: (name) ->
+
+		delete @_map[name]
+
+		@
+
+	has: (name) ->
+
+		@_map[name]?
+
+
+	#
+	#	HTML
+	#
+
+	html: (text) ->
+
+		@node.innerHTML = text
+
+		@
+
+	attr: (name, val) ->
+
+		@node.setAttribute name, val
+
+		@
+
+	#
+	#	CSS
+	#
+
+	css: (name, val) ->
+
+		@_style[name] = val
+
+		@
 
 	#
 	#	Size
@@ -104,27 +205,27 @@ module.exports = class StupidDOMInterface
 
 	getWidth: ->
 
-		@_s[0]
+		@_props[0]
 
 	width: (width) ->
 
 		@_style.width = width + 'px'
 
-		@_s[0] = width
+		@_props[0] = width
 
-		return @
+		@
 
 	getHeight: ->
 
-		@_s[1]
+		@_props[1]
 
 	height: (height) ->
 
 		@_style.height = height + 'px'
 
-		@_s[1] = height
+		@_props[1] = height
 
-		return @
+		@
 
 	#
 	#	Pos
@@ -132,51 +233,51 @@ module.exports = class StupidDOMInterface
 
 	getTop: ->
 
-		@_s[2]
+		@_props[2]
 
 	top: (top) ->
 
 		@_style.top = top + 'px'
 
-		@_s[2] = top
+		@_props[2] = top
 
-		return @
+		@
 
 	getLeft: ->
 
-		@_s[3]
+		@_props[3]
 
 	left: (left) ->
 
 		@_style.left = left + 'px'
 
-		@_s[3] = left
+		@_props[3] = left
 
-		return @
+		@
 
 	getBottom: ->
 
-		@_s[4]
+		@_props[4]
 
 	bottom: (bottom) ->
 
 		@_style.bottom = bottom + 'px'
 
-		@_s[4] = bottom
+		@_props[4] = bottom
 
-		return @
+		@
 
 	getRight: ->
 
-		@_s[5]
+		@_props[5]
 
 	right: (right) ->
 
 		@_style.right = right + 'px'
 
-		@_s[5] = right
+		@_props[5] = right
 
-		return @
+		@
 
 	#
 	#	Opacity
@@ -184,15 +285,15 @@ module.exports = class StupidDOMInterface
 
 	getOpacity: ->
 
-		@_s[6]
+		@_props[6]
 
 	opacity: (opacity) ->
 
 		@_style.opacity = opacity
 
-		@_s[6] = opacity
+		@_props[6] = opacity
 
-		return @
+		@
 
 	#
 	#	Text Shadow
@@ -200,53 +301,53 @@ module.exports = class StupidDOMInterface
 
 	getTextShadowH: ->
 
-		@_s[7]
+		@_props[7]
 
 	textShadowH: (h) ->
 
-		@_s[7] = h
+		@_props[7] = h
 
 		do @_setTextShadow
 
-		return @
+		@
 
 	getTextShadowV: ->
 
-		@_s[8]
+		@_props[8]
 
 	textShadowV: (v) ->
 
-		@_s[8] = v
+		@_props[8] = v
 
 		do @_setTextShadow
 
-		return @
+		@
 
 	getTextShadowBlur: ->
 
-		@_s[9]
+		@_props[9]
 
 	textShadowBlur: (blur) ->
 
-		@_s[9] = blur
+		@_props[9] = blur
 
 		do @_setTextShadow
 
-		return @
+		@
 
 	getTextShadowColor: ->
 
-		[@_s[10], @_s[11], @_s[12]]
+		[@_props[10], @_props[11], @_props[12]]
 
 	textShadowColor: (colorRed, colorGreen, colorBlue) ->
 
-		@_s[10] = colorRed
-		@_s[11] = colorGreen
-		@_s[12] = colorBlue
+		@_props[10] = colorRed
+		@_props[11] = colorGreen
+		@_props[12] = colorBlue
 
 		do @_setTextShadow
 
-		return @
+		@
 
 	#
 	#	Transforms
@@ -256,119 +357,169 @@ module.exports = class StupidDOMInterface
 
 	getRotateX: ->
 
-		@_s[13]
+		@_props[13]
 
 	rotateX: (rotateX) ->
 
-		@_s[13] = rotateX
+		@_props[13] = rotateX
 
 		do @_setTransform
 
-		return @
+		@
 
 	getRotateY: ->
 
-		@_s[14]
+		@_props[14]
 
 	rotateY: (rotateY) ->
 
-		@_s[14] = rotateY
+		@_props[14] = rotateY
 
 		do @_setTransform
 
-		return @
+		@
 
 	getRotateZ: ->
 
-		@_s[15]
+		@_props[15]
 
 	rotateZ: (rotateZ) ->
 
-		@_s[15] = rotateZ
+		@_props[15] = rotateZ
 
 		do @_setTransform
 
-		return @
+		@
 
 	#
 	#	Translate
 	#
 
-	getTranslateX: ->
+	getX: ->
 
-		@_s[16]
+		@_props[16]
 
-	translateX: (translateX) ->
+	x: (x) ->
 
-		@_s[16] = translateX
-
-		do @_setTransform
-
-		return @
-
-	getTranslateY: ->
-
-		@_s[17]
-
-	translateY: (translateY) ->
-
-		@_s[17] = translateY
+		@_props[16] = x
 
 		do @_setTransform
 
-		return @
+		@
 
-	getTranslateZ: ->
+	getY: ->
 
-		@_s[18]
+		@_props[17]
 
-	translateZ: (translateZ) ->
+	y: (y) ->
 
-		@_s[18] = translateZ
+		@_props[17] = y
 
 		do @_setTransform
 
-		return @
+		@
+
+	getZ: ->
+
+		@_props[18]
+
+	z: (z) ->
+
+		@_props[18] = z
+
+		do @_setTransform
+
+		@
+
+	#
+	#	local
+	#
+
+	getlocalX: ->
+
+		@_props[19]
+
+	localX: (localX) ->
+
+		@_props[19] = localX
+
+		do @_setTransform
+
+		@
+
+	getlocalY: ->
+
+		@_props[20]
+
+	localY: (localY) ->
+
+		@_props[20] = localY
+
+		do @_setTransform
+
+		@
+
+	getlocalZ: ->
+
+		@_props[21]
+
+	localZ: (localZ) ->
+
+		@_props[21] = localZ
+
+		do @_setTransform
+
+		@
 
 	#
 	#	Scale
 	#
 
+	scale: (scaleX, scaleY, scaleZ) ->
+
+		@_props[22] = scaleX
+		@_props[23] = scaleY
+		@_props[24] = scaleZ
+
+		do @_setTransform
+
+		@
+
 	getScaleX: ->
 
-		@_s[19]
+		@_props[22]
 
 	scaleX: (scaleX) ->
 
-		@_s[19] = scaleX
+		@_props[22] = scaleX
 
 		do @_setTransform
 
-		return @
+		@
 
 	getScaleY: ->
 
-		@_s[20]
+		@_props[23]
 
 	scaleY: (scaleY) ->
 
-		@_s[20] = scaleY
+		@_props[23] = scaleY
 
 		do @_setTransform
 
-		return @
+		@
 
 	getScaleZ: ->
 
-		@_s[21]
+		@_props[24]
 
 	scaleZ: (scaleZ) ->
 
-		@_s[21] = scaleZ
+		@_props[24] = scaleZ
 
 		do @_setTransform
 
-		return @
+		@
 
 	#
 	#	Skew
@@ -376,27 +527,27 @@ module.exports = class StupidDOMInterface
 
 	getSkewX: ->
 
-		@_s[22]
+		@_props[25]
 
 	skewX: (skewX) ->
 
-		@_s[22] = skewX
+		@_props[25] = skewX
 
 		do @_setTransform
 
-		return @
+		@
 
 	getSkewY: ->
 
-		@_s[23]
+		@_props[26]
 
 	skewY: (skewY) ->
 
-		@_s[23] = skewY
+		@_props[26] = skewY
 
 		do @_setTransform
 
-		return @
+		@
 
 	#
 	#	perspective
@@ -404,13 +555,104 @@ module.exports = class StupidDOMInterface
 
 	getPerspective: ->
 
-		@_s[24]
+		@_props[27]
 
 	perspective: (perspective) ->
 
-		@_s[24] = perspective
+		@_props[27] = perspective
 
 		do @_setTransform
 
-		return @
+		@
 
+	#
+	#
+	#
+
+	current: (prop) ->
+
+		comp = getComputedStyle @node
+
+		if prop?
+
+			comp[prop]
+
+		else
+
+			comp
+
+	@_parseTag: (k) ->
+
+		# validate
+		if not k.match(/^[a-zA-Z0-9\#\-\_\.\[\]\"\'\=\,\s\:]+$/) or k.match(/^[0-9]+/)
+
+			throw Error "cannot parse tag `#{k}`"
+
+		attribs = {}
+
+		parts =
+
+			name: ''
+
+			attribs: attribs
+
+			ns: no
+
+		if k.match /^svg\:/
+
+			parts.ns = 'http://www.w3.org/2000/svg'
+
+			k = k.substr 4, k.length
+
+		# tag name
+		if m = k.match /^([^\.#]+)/
+
+			name = m[1]
+
+			unless name.match self._nameRx
+
+				throw Error "tag name `#{name}` is not valid"
+
+			parts.name = name
+
+			k = k.substr name.length, k.length
+
+		# tag id
+		if m = k.match /^#([a-zA-Z0-9\-]+)/
+
+			id = m[1]
+
+			unless id.match self._nameRx
+
+				throw Error "tag id `#{id}` is not valid"
+
+			attribs.id = id
+
+			k = k.substr id.length + 1, k.length
+
+		classes = []
+
+		# the class attrib
+		while m = k.match /\.([a-zA-Z0-9\-\_]+)/
+
+			cls = m[1]
+
+			unless cls.match self._nameRx
+
+				throw Error "tag class `#{cls}` is not valid"
+
+			classes.push cls
+
+			k = k.replace '.' + cls, ''
+
+		if classes.length
+
+			attribs.class = classes.join " "
+
+		# TODO: match attributes like [a=b]
+
+		parts
+
+	@_nameRx: /^[a-zA-Z\-\_]{1}[a-zA-Z0-9\-\_]*$/
+
+	self = @

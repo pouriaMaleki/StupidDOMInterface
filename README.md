@@ -8,7 +8,7 @@ beta testing:
 
 	# optional init
 
-	initOptions =
+	props =
 
 		height: 200
 		width: 300
@@ -47,18 +47,17 @@ beta testing:
 
 		perspective: 400
 
-	dumElement1 = new DUM(element, initOptions)
+	dumElement1 = new DUM(element, props)
 	.x(400)
 	.y(200)
 
 	console.log dumElement1.getX()
 
 
-	dumElement2 = DUM('.hello', initOptions)
+	dumElement2 = DUM('.hello', props)
 	.inside(document.body)
-	.html('Foxie')
-	.set('salam', 'farsi')
+	.html('custom html')
+	.set('someVar', 'some value')
 
-	console.log dumElement2.get('salam')
+	console.log dumElement2.get('someVar')
 	console.log dumElement2.current('width')
-

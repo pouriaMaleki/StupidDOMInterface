@@ -28,6 +28,10 @@ module.exports = class StupidDOMInterface
 
 				node.setAttribute name, val
 
+		else if not node?
+
+			node = document.createElement 'div'
+
 		unless node instanceof Element
 
 			throw Error "node must be an HTML element."
@@ -207,7 +211,11 @@ module.exports = class StupidDOMInterface
 
 				@css name, val
 
-		return @
+			return @
+
+		name = name
+		.replace(/([A-Z]{1})/g, '-$1')
+		.toLowerCase()
 
 		@_style[name] = val
 

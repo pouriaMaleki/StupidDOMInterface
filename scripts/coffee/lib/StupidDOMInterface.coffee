@@ -63,6 +63,10 @@ module.exports = class StupidDOMInterface
 
 	inside: (node) ->
 
+		if node.node?
+
+			node = node.node
+
 		node.appendChild @node
 
 		@
@@ -195,6 +199,16 @@ module.exports = class StupidDOMInterface
 
 	css: (name, val) ->
 
+		if typeof name is 'object'
+
+			obj = name
+
+			for name, val of obj
+
+				@css name, val
+
+		return @
+
 		@_style[name] = val
 
 		@
@@ -224,6 +238,12 @@ module.exports = class StupidDOMInterface
 		@_style.height = height + 'px'
 
 		@_props[1] = height
+
+		@
+
+	zIndex: (z) ->
+
+		@_style.zIndex = z
 
 		@
 
@@ -580,6 +600,30 @@ module.exports = class StupidDOMInterface
 		else
 
 			comp
+
+	addClass: (c) ->
+
+		@node.classList.add c
+
+		@
+
+	removeClass: (c) ->
+
+		@node.classList.remove c
+
+		@
+
+	toggleClass: (c) ->
+
+		@node.classList.toggle c
+
+		@
+
+	setClass: (c) ->
+
+		@node.className = c
+
+		@
 
 	@_parseTag: (k) ->
 

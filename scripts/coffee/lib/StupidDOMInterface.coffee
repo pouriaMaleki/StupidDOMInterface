@@ -145,13 +145,13 @@ module.exports = class StupidDOMInterface
 
 			transformString = ' rotateZ(' + @_props[15] + 'deg) ' + transformString
 
-		if @_props[27] < 1000000
-
-			transformString = ' perspective(' + @_props[27] + ') ' + transformString
-
 		if @_props[16] isnt 0 or @_props[17] isnt 0 or @_props[18] isnt 0
 
 			transformString = ' translate3d(' + @_props[16] + 'px, ' + @_props[17] + 'px, ' + @_props[18] + 'px) ' + transformString
+
+		if @_props[27] < 1000000
+
+			transformString = ' perspective(' + @_props[27] + 'px) ' + transformString
 
 
 		css.setTransform @node, transformString
@@ -503,11 +503,11 @@ module.exports = class StupidDOMInterface
 	#	Scale
 	#
 
-	scale: (scaleX, scaleY, scaleZ) ->
+	scale: (amount) ->
 
-		@_props[22] = scaleX
-		@_props[23] = scaleY
-		@_props[24] = scaleZ
+		@_props[22] = amount
+		@_props[23] = amount
+		@_props[24] = amount
 
 		do @_setTransform
 

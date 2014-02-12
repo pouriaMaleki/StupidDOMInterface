@@ -38,6 +38,10 @@ module.exports = css =
 
 	setTransformOrigin: cssPropertySetter 'transformOrigin'
 
+	setTransformOriginX: cssPropertySetter 'transformOriginX'
+	setTransformOriginY: cssPropertySetter 'transformOriginY'
+	setTransformOriginZ: cssPropertySetter 'transformOriginZ'
+
 	setCssFilter: cssPropertySetter 'filter'
 
 	setTransitionDuration: cssPropertySetter 'transitionDuration'

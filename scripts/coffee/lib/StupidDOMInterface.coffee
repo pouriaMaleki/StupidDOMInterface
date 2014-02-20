@@ -597,6 +597,34 @@ module.exports = class StupidDOMInterface
 	#
 	#
 
+	transformOriginX: (x) ->
+
+		css.setTransformOriginX @node, x + 'px'
+
+		@
+
+	transformOriginY: (y) ->
+
+		css.setTransformOriginY @node, y + 'px'
+
+		@
+
+	transformOriginZ: (z) ->
+
+		css.setTransformOriginZ @node, z + 'px'
+
+		@
+
+	transformStyle: (v) ->
+
+		css.setTransformStyle @node, v
+
+		@
+
+	preserve3d: ->
+
+		@transformStyle 'preserve-3d'
+
 	current: (prop) ->
 
 		comp = getComputedStyle @node

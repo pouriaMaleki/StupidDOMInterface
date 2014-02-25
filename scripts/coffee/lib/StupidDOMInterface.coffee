@@ -599,19 +599,19 @@ module.exports = class StupidDOMInterface
 
 	transformOriginX: (x) ->
 
-		css.setTransformOriginX @node, x + 'px'
+		css.setTransformOriginX @node, x + '%'
 
 		@
 
 	transformOriginY: (y) ->
 
-		css.setTransformOriginY @node, y + 'px'
+		css.setTransformOriginY @node, y + '%'
 
 		@
 
 	transformOriginZ: (z) ->
 
-		css.setTransformOriginZ @node, z + 'px'
+		css.setTransformOriginZ @node, z + '%'
 
 		@
 

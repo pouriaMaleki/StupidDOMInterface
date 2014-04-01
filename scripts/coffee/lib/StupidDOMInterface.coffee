@@ -75,6 +75,16 @@ module.exports = class StupidDOMInterface
 
 		@
 
+	adopt: (node) ->
+
+		if node.node?
+
+			node = node.node
+
+		@node.appendChild node
+
+		@
+
 	detach: ->
 
 		p = @node.parentNode
@@ -212,10 +222,6 @@ module.exports = class StupidDOMInterface
 				@css name, val
 
 			return @
-
-		name = name
-		.replace(/([A-Z]{1})/g, '-$1')
-		.toLowerCase()
 
 		@_style[name] = val
 
@@ -599,19 +605,19 @@ module.exports = class StupidDOMInterface
 
 	transformOriginX: (x) ->
 
-		css.setTransformOriginX @node, x + 'px'
+		css.setTransformOriginX @node, x + '%'
 
 		@
 
 	transformOriginY: (y) ->
 
-		css.setTransformOriginY @node, y + 'px'
+		css.setTransformOriginY @node, y + '%'
 
 		@
 
 	transformOriginZ: (z) ->
 
-		css.setTransformOriginZ @node, z + 'px'
+		css.setTransformOriginZ @node, z + '%'
 
 		@
 

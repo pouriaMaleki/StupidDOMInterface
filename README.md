@@ -1,5 +1,9 @@
 (work in progress)
 
+installation:
+
+	npm install stupid-dom-interface
+
 beta testing:
 
 	DUM = require 'StupidDOMInterface'
@@ -61,3 +65,9 @@ beta testing:
 
 	console.log dumElement2.get('someVar')
 	console.log dumElement2.current('width')
+
+
+	dumInput3 = DUM('input[type=text, placeholder=x, value=20].cssclass1.classClass2')
+	.inside(dumElement2)
+
+	dumInput3.node.addEventListener('change', callbackFunction)

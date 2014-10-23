@@ -691,7 +691,7 @@ module.exports = class StupidDOMInterface
 			k = k.substr 4, k.length
 
 		# tag name
-		if m = k.match /^([^\.#]+)/
+		if m = k.match /^([^\.#\[]+)/
 
 			name = m[1]
 
@@ -702,6 +702,18 @@ module.exports = class StupidDOMInterface
 			parts.name = name
 
 			k = k.substr name.length, k.length
+
+		if m = k.match /^\[([^\]]+)\]/
+
+			pairs = m[1].split(',').map (s) -> s.trim()
+
+			for pair in pairs
+
+				[attrName, attrVal] = pair.split('=').map (s) -> s.trim()
+
+				attribs[attrName] = attrVal
+
+			k = k.substr m[0].length, k.length
 
 		# tag id
 		if m = k.match /^#([a-zA-Z0-9\-]+)/

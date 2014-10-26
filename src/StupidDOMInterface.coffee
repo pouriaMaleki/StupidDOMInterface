@@ -203,6 +203,10 @@ module.exports = class StupidDOMInterface
 
 	attr: (name, val) ->
 
+		unless val?
+
+			return @node.getAttribute name
+
 		@node.setAttribute name, val
 
 		@

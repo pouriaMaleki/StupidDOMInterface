@@ -2,7 +2,7 @@
   "name": "stupid-dom-interface",
   "version": "0.1.0-beta.14",
   "description": "Simple JS library for setting and getting DOM element styles",
-  "main": "scripts/js/lib/StupidDOMInterface.js",
+  "main": "lib/StupidDOMInterface.js",
   "scripts": {
     "prepublish": "coffee --bare --compile --output ./lib ./src",
     "watch": "jitter src lib -b"
